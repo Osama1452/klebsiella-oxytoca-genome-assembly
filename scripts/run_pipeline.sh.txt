@@ -1,0 +1,73 @@
+#!/bin/bash
+# run_pipeline.sh: A complete pipeline for Klebsiella oxytoca genome assembly and annotation
+# This script performs the following steps:
+# 1. Download data from NCBI SRA
+# 2. Quality control with FastQC
+# 3. Trimming with Trimmomatic
+# 4. Assembly with SPAdes
+# 5. Quality assessment with QUAST
+# 6. Annotation with DFAST and RAST
+
+# Set up directories
+BASE_DIR=$(pwd)
+INPUT_DIR="$BASE_DIR/../input_data"
+OUTPUT_DIR="$BASE_DIR/../output"
+FASTQC_RAW_DIR="$OUTPUT_DIR/fastqc/raw"
+FASTQC_TRIMMED_DIR="$OUTPUT_DIR/fastqc/trimmed"
+TRIMMED_READS_DIR="$OUTPUT_DIR/trimmed_reads"
+ASSEMBLY_DIR="$OUTPUT_DIR/assembly"
+QUAST_DIR="$OUTPUT_DIR/quast"
+DFAST_DIR="$OUTPUT_DIR/dfast"
+RAST_DIR="$OUTPUT_DIR/rast"
+
+# Create directories if they don't exist
+mkdir -p "$INPUT_DIR" "$FASTQC_RAW_DIR" "$FASTQC_TRIMMED_DIR" "$TRIMMED_READS_DIR" "$ASSEMBLY_DIR" "$QUAST_DIR" "$DFAST_DIR" "$RAST_DIR"
+
+# Step 1: Download data from NCBI SRA
+echo "Step 1: Downloading SRR32937950 from NCBI SRA..."
+prefetch SRR32937950
+fasterq-dump SRR32937950 -O "$INPUT_DIR"
+echo "Data downloaded to $INPUT_DIR"
+
+# Step 2: Quality control on raw reads using FastQC
+echo "Step 2: Running FastQC on raw reads..."
+fastqc "$INPUT_DIR/SRR32937950_1.fastq" "$INPUT_DIR/SRR32937950_2.fastq" -o "$FASTQC_RAW_DIR"
+echo "FastQC reports for raw reads saved to $FASTQC_RAW_DIR"
+
+# Step 3: Trim reads using Trimmomatic
+echo "Step 3: Trimming reads with Trimmomatic..."
+java -jar trimmomatic-0.39.jar PE \
+  "$INPUT_DIR/SRR32937950_1.fastq" "$INPUT_DIR/SRR32937950_2.fastq" \
+  "$TRIMMED_READS_DIR/SRR32937950_1_trimmed_paired.fastq" "$TRIMMED_READS_DIR/SRR32937950_1_trimmed_unpaired.fastq" \
+  "$TRIMMED_READS_DIR/SRR32937950_2_trimmed_paired.fastq" "$TRIMMED_READS_DIR/SRR32937950_2_trimmed_unpaired.fastq" \
+  LEADING:20 TRAILING:20 SLIDINGWINDOW:4:15 MINLEN:36
+echo "Trimmed reads saved to $TRIMMED_READS_DIR"
+
+# Step 4: Quality control on trimmed reads using FastQC
+echo "Step 4: Running FastQC on trimmed reads..."
+fastqc "$TRIMMED_READS_DIR/SRR32937950_1_trimmed_paired.fastq" "$TRIMMED_READS_DIR/SRR32937950_2_trimmed_paired.fastq" -o "$FASTQC_TRIMMED_DIR"
+echo "FastQC reports for trimmed reads saved to $FASTQC_TRIMMED_DIR"
+
+# Step 5: Genome assembly using SPAdes
+echo "Step 5: Assembling genome with SPAdes..."
+spades.py -1 "$TRIMMED_READS_DIR/SRR32937950_1_trimmed_paired.fastq" \
+  -2 "$TRIMMED_READS_DIR/SRR32937950_2_trimmed_paired.fastq" \
+  -o "$ASSEMBLY_DIR"
+echo "Assembly output saved to $ASSEMBLY_DIR"
+
+# Step 6: Quality assessment using QUAST
+echo "Step 6: Assessing assembly quality with QUAST..."
+quast.py "$ASSEMBLY_DIR/scaffolds.fasta" -o "$QUAST_DIR"
+echo "QUAST report saved to $QUAST_DIR"
+
+# Step 7: Annotation using DFAST
+echo "Step 7: Annotating genome with DFAST..."
+dfast --genome "$ASSEMBLY_DIR/scaffolds.fasta" --out "$DFAST_DIR"
+echo "DFAST annotation results saved to $DFAST_DIR"
+
+# Step 8: Annotation using RAST (placeholder, as RAST is a web tool)
+echo "Step 8: Annotating genome with RAST..."
+echo "RAST annotation was performed via the RAST web server. Results are in $RAST_DIR"
+# Note: RAST output should be manually placed in output/rast/ after running on the web server
+
+echo "Pipeline completed successfully!"

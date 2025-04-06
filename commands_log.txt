@@ -1,0 +1,74 @@
+    1  cd /mnt/c/Users/osama/miniconda3
+    2  ls /mnt/c/Users/osama/miniconda3
+    3  /mnt/c/Users/osama/miniconda3/Scripts/conda.exe --version
+    4  /mnt/c/Users/osama/miniconda3/Scripts/conda.exe init bash
+    5  conda --version
+    6  source ~/.bashrc
+    7  conda --version
+    8  conda create -n phage_assembly python=3.9
+    9  ls -ld ~/miniconda3
+   10  ~/miniconda3/bin/conda init bash
+   11  nano ~/.bashrc
+   12  uname -a
+   13  sudo apt update && sudo apt upgrade -y
+   14  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+   15  bash ~/Miniconda3-latest-Linux-x86_64.sh
+   16  source ~/.bashrc
+   17  conda --version
+   18  conda create -n phage_assembly python=3.9
+   19  conda activate phage_assembly
+   20  conda install -c bioconda sra-tools
+   21  cd /mnt/c/Users/osama/Downloads
+   22  pwd
+   23  mkdir phage_assembly_project
+   24  cd phage_assembly_project
+   25  fasterq-dump SRR32578186
+   26  conda install -c bioconda fastqc
+   27  fastqc SRR32578186_1.fastq SRR32578186_2.fastq
+   28  conda install bioconda::trimmomatic
+   29  conda install -c bioconda trimmomatic
+   30  trimmomatic PE -phred33 SRR32578186_1.fastq SRR32578186_2.fastq SRR32578186_1_trimmed.fastq SRR32578186_1_unpaired.fastq SRR32578186_2_trimmed.fastq SRR32578186_2_unpaired.fastq ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
+   31  cd /mnt/c/Users/osama/Downloads/phage_assembly_project/fastqc
+   32  /mnt/c/Users/osama/Downloads/phage_assembly_project
+   33  trimmomatic PE -phred33 SRR32578186_1.fastq SRR32578186_2.fastq SRR32578186_1_trimmed.fastq SRR32578186_1_unpaired.fastq SRR32578186_2_trimmed.fastq SRR32578186_2_unpaired.fastq ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
+   34  cd /mnt/c/Users/osama/Downloads/phage_assembly_project/raw_reads
+   35  trimmomatic PE -phred33 SRR32578186_1.fastq SRR32578186_2.fastq SRR32578186_1_trimmed.fastq SRR32578186_1_unpaired.fastq SRR32578186_2_trimmed.fastq SRR32578186_2_unpaired.fastq ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
+   36  fastqc SRR32578186_1_trimmed.fastq SRR32578186_2_trimmed.fastq
+   37  conda create -n Klebsiella_assembly
+   38  conda activate Klebsiella_assembly
+   39  conda config --add channels defaults
+   40  conda config --add channels bioconda
+   41  conda config --add channels conda-forge
+   42  conda install -c bioconda sra-tools
+   43  mkdir -p /home/osama/Downloads/genome_assembly_project
+   44  cd /home/osama/Downloads/genome_assembly_project
+   45  mkdir raw_data assembly quast_results
+   46  mkdir -p /mnt/c/Users/osama/Downloads/genome_assembly_project
+   47  cd /mnt/c/Users/osama/Downloads/genome_assembly_project
+   48  prefetch SRR32937950
+   49  fasterq-dump SRR32937950 --split-files -O /home/osama/Downloads/genome_assembly_project/raw_data
+   50  fasterq-dump SRR32937950 --split-files -O /home/osama/Downloads/genome_assembly_project
+   51  cd
+   52  ls
+   53  cd /mnt/c/Users/osama/Downloads/genome_assembly_project
+   54  ls
+   55  find / -name "SRR32937950_1.fastq" 2>/dev/null
+   56  fasterq-dump SRR32937950 --split-files -O /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data
+   57  conda install fastqc
+   58  fastqc /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data/SRR32937950_1.fastq        /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data/SRR32937950_2.fastq        -o /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data
+   59  conda install -c bioconda trimmomatic cutadapt
+   60  trimmomatic PE   /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data/SRR32937950_1.fastq   /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data/SRR32937950_2.fastq   /mnt/c/Users/osama/Downloads/genome_assembly_project/trimmed_data/SRR32937950_1_trimmed.fastq   /mnt/c/Users/osama/Downloads/genome_assembly_project/trimmed_data/SRR32937950_1_unpaired.fastq   /mnt/c/Users/osama/Downloads/genome_assembly_project/trimmed_data/SRR32937950_2_trimmed.fastq   /mnt/c/Users/osama/Downloads/genome_assembly_project/trimmed_data/SRR32937950_2_unpaired.fastq   ILLUMINACLIP:/path/to/adapters/TruSeq3-PE-2.fa:2:30:10   LEADING:20   TRAILING:20   SLIDINGWINDOW:4:20   MINLEN:50
+   61  mkdir -p /mnt/c/Users/osama/Downloads/genome_assembly_project/adapters
+   62  nano /mnt/c/Users/osama/Downloads/genome_assembly_project/adapters/adapters.fa
+   63  trimmomatic PE -phred33   /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data/SRR32937950_1.fastq   /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data/SRR32937950_2.fastq   /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data/SRR32937950_1_trimmed_paired.fastq   /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data/SRR32937950_1_trimmed_unpaired.fastq   /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data/SRR32937950_2_trimmed_paired.fastq   /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data/SRR32937950_2_trimmed_unpaired.fastq   ILLUMINACLIP:TruSeq3-PE.fa:2:30:10   LEADING:20   TRAILING:20   SLIDINGWINDOW:4:15   MINLEN:36
+   64  fastqc /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data/trimmomatic1/SRR32937950_1_trimmed_paired.fastq        /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data/trimmomatic1/SRR32937950_2_trimmed_paired.fastq        -o /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data/trimmomatic1
+   65  conda install bioconda::spades
+   66  spades.py -1 /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data/trimmomatic1/SRR32937950_1_trimmed_paired.fastq           -2 /mnt/c/Users/osama/Downloads/genome_assembly_project/raw_data/trimmomatic1/SRR32937950_2_trimmed_paired.fastq           -o /mnt/c/Users/osama/Downloads/genome_assembly_project/assembly           --careful           --threads 8
+   67  head /mnt/c/Users/osama/Downloads/genome_assembly_project/assembly/scaffolds.fasta
+   68  grep ">" /mnt/c/Users/osama/Downloads/genome_assembly_project/assembly/scaffolds.fasta | wc -l
+   69  conda install quast
+   70  conda install bioconda::quast
+   71  quast.py /mnt/c/Users/osama/Downloads/genome_assembly_project/assembly/scaffolds.fasta          -o /mnt/c/Users/osama/Downloads/genome_assembly_project/quast_results
+   72  history -a
+   73  history
+   74  history > /mnt/c/Users/osama/Downloads/genome_assembly_project/commands_log.txt

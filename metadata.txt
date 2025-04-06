@@ -1,0 +1,17 @@
+# Metadata for Klebsiella oxytoca Genome Assembly (SRR32937950)
+
+sample_name	        K_oxytoca_SRR32937950
+bioproject_accession	PRJNA981165
+biosample_accession	SAMN47734333
+organism	        Klebsiella oxytoca    
+strain	                NJDOH control strain    
+isolation_source	Laboratory culture    
+collection_date 	2025-04-01    
+location	        New Jersey, USA    
+host	                N/A    
+sequencing_technology	Illumina MiSeq    
+assembly_method 	SPAdes   
+assembly_version 	3.15.5    
+annotation_method 	DFAST, RAST   
+submitter_name 		Osama Aldesoky    
+submitter_email 	osama2172003aldesoky@gmail.com    
